@@ -25,3 +25,12 @@ resource "openstack_identity_role_assignment_v3" "os_role_assignment" {
   project_id = openstack_identity_project_v3.os_project.id
   role_id    = data.openstack_identity_role_v3.member.id
 }
+
+resource "openstack_compute_quotaset_v2" "quotaset_1" {
+  project_id           = openstack_identity_project_v3.os_project.id
+  instances            = 15
+  cores                = 32
+  ram                  = 131072
+  security_groups      = 20
+  security_group_rules = 200
+}
