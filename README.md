@@ -50,10 +50,11 @@ source admin-openrc.sh
 git clone https://github.com/Algueron/openstack-kubernetes-baremetal.git
 ````
 
-- Fill the variable file
+- Fill the variable files
 ````bash
 export OS_USER_PASSWORD=$(openssl rand -base64 18)
-sed -i -e "s~OS_USER_PASSWORD~$OS_USER_PASSWORD~g" openstack-kubernetes-baremetal/project.tfvars
+sed -i -e "s~OS_USER_PASSWORD~$OS_USER_PASSWORD~g" $PWD/openstack-kubernetes-baremetal/project.tfvars
+sed -i -e "s~OS_USER_PASSWORD~$OS_USER_PASSWORD~g" $PWD/openstack-kubernetes-baremetal/kubernetes-openrc.sh
 ````
 
 - Download OpenTofu providers
@@ -66,3 +67,21 @@ tofu -chdir=$PWD/openstack-kubernetes-baremetal/opentofu/project init
 tofu -chdir=$PWD/openstack-kubernetes-baremetal/opentofu/project apply -var-file=$PWD/openstack-kubernetes-baremetal/project.tfvars
 ````
 
+## Kubernetes Cluster
+
+### Openstack Provisioning
+
+- Log to Openstack as Admin
+````bash
+source $PWD/openstack-kubernetes-baremetal/kubernetes-openrc.sh
+````
+
+- Download OpenTofu providers and initialize project
+````bash
+tofu -chdir=$PWD/openstack-kubernetes-baremetal/opentofu/cluster init
+````
+
+- Deploy the Openstack project
+````bash
+tofu -chdir=$PWD/openstack-kubernetes-baremetal/opentofu/cluster apply
+````
