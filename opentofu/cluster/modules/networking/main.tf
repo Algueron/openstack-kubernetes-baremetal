@@ -1,3 +1,19 @@
+resource "openstack_networking_secgroup_v2" "allow-ssh" {
+  name        = "allow-ssh"
+  description = "Security Group for SSH connection"
+}
+
+resource "openstack_networking_secgroup_rule_v2" "ssh-secgroup-rule" {
+  description       = "SSH"
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "tcp"
+  port_range_min    = 22
+  port_range_max    = 22
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = openstack_networking_secgroup_v2.allow-ssh.id
+}
+
 resource "openstack_networking_secgroup_v2" "kubernetes-control-plane" {
   name        = "kubernetes-master"
   description = "Security Group for Kubernetes Master nodes"
