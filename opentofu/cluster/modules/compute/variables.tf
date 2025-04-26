@@ -39,10 +39,9 @@ variable "worker_node_flavor" {
     default     = "t2.2xlarge"
 }
 
-variable "worker_node_volume_size_gb" {
-    description = "Size in gigabytes for the volume to create on each worker node"
-    type        = number
-    default     = 150
+variable "rook_volume_ids" {
+    description = "Ids of the volumes provisoned for Rook"
+    type        = list
 }
 
 variable "worker_node_volume_device" {
