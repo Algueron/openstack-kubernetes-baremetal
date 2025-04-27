@@ -163,3 +163,35 @@ cd ~/
 ````
 
 ## Post-setup operations
+
+- Download kubectl
+````bash
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x kubectl
+````
+
+- Retrieve Kubernetes first master's IP
+````bash
+MASTER_IP=$(cat ~/openstack-kubernetes-baremetal/kubespray/inventory/mycluster/inventory.ini | grep mycluster-k8s-node-master-0 | awk '{print $2'} | cut -d '=' -f 2)
+````
+
+- Get admin configuration file
+````bash
+ssh ubuntu@$MASTER_IP sudo cat /etc/kubernetes/admin.conf > admin.conf
+````
+
+- Set Master's IP
+````bash
+sed -i -e "s/127.0.0.1/$MASTER_IP/g" admin.conf
+````
+
+- Copy the configuration to the proper location
+````bash
+mkdir -p ~/.kube
+cp admin.conf $HOME/.kube/config
+````
+
+- Check kubernetes configuration
+````bash
+./kubectl version
+````
