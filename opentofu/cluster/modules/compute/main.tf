@@ -23,7 +23,7 @@ resource "openstack_compute_instance_v2" "control_plane_node" {
   image_id        = data.openstack_images_image_v2.os_image.id
   flavor_id       = data.openstack_compute_flavor_v2.control_plane_flavor.id
   key_pair        = "kubernetes-keypair"
-  security_groups = ["default", "kubernetes-master", "allow-ssh"]
+  security_groups = ["default", "kubernetes-master", "allow-ssh", "allow-icmp"]
 
   network {
     name          = var.network_name
@@ -37,7 +37,7 @@ resource "openstack_compute_instance_v2" "worker_node" {
   image_id        = data.openstack_images_image_v2.os_image.id
   flavor_id       = data.openstack_compute_flavor_v2.worker_node_flavor.id
   key_pair        = "kubernetes-keypair"
-  security_groups = ["default", "kubernetes-master", "allow-ssh"]
+  security_groups = ["default", "kubernetes-master", "allow-ssh", "allow-icmp"]
 
   network {
     name          = var.network_name

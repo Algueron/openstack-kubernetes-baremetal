@@ -1,3 +1,6 @@
+#########################################################################
+# Security Group to allow SSH
+#########################################################################
 resource "openstack_networking_secgroup_v2" "allow-ssh" {
   name        = "allow-ssh"
   description = "Security Group for SSH connection"
@@ -14,6 +17,28 @@ resource "openstack_networking_secgroup_rule_v2" "ssh-secgroup-rule" {
   security_group_id = openstack_networking_secgroup_v2.allow-ssh.id
 }
 
+
+#########################################################################
+# Security Group to allow PING
+#########################################################################
+resource "openstack_networking_secgroup_v2" "allow-icmp" {
+  name        = "allow-icmp"
+  description = "Security Group for ping"
+}
+
+resource "openstack_networking_secgroup_rule_v2" "icmp-secgroup-rule" {
+  description       = "Ping"
+  direction         = "ingress"
+  ethertype         = "IPv4"
+  protocol          = "icmp"
+  remote_ip_prefix  = "0.0.0.0/0"
+  security_group_id = openstack_networking_secgroup_v2.allow-icmp.id
+}
+
+
+#########################################################################
+# Security Group for Kubernetes Master Nodes
+#########################################################################
 resource "openstack_networking_secgroup_v2" "kubernetes-control-plane" {
   name        = "kubernetes-master"
   description = "Security Group for Kubernetes Master nodes"
@@ -74,6 +99,10 @@ resource "openstack_networking_secgroup_rule_v2" "kube-controller-manager" {
   security_group_id = openstack_networking_secgroup_v2.kubernetes-control-plane.id
 }
 
+
+#########################################################################
+# Security Group for Kubernetes Worker Nodes
+#########################################################################
 resource "openstack_networking_secgroup_v2" "kubernetes-worker-node" {
   name        = "kubernetes-node"
   description = "Security Group for Kubernetes Compute nodes"
