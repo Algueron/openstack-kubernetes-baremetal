@@ -33,9 +33,10 @@ OPENTOFU_IP=$(openstack server show opentofu --column addresses --format json | 
 scp -i opentofu.key /etc/kolla/admin-openrc.sh ubuntu@$OPENTOFU_IP:
 ````
 
-- Copy the public key you want t use onto the OpenTofu server
+- Copy the public and private key you want t use onto the OpenTofu server
 ````bash
 scp -i opentofu.key ~/.ssh/id_rsa.pub ubuntu@$OPENTOFU_IP:~/.ssh/id_rsa.pub
+scp -i opentofu.key ~/.ssh/id_rsa ubuntu@$OPENTOFU_IP:~/.ssh/id_rsa
 ````
 
 ## Openstack Project
@@ -116,3 +117,49 @@ source admin-openrc.sh
 ````bash
 openstack port list --device-owner=compute:nova --project kubernetes -c ID -f value | xargs -tI@ openstack port set @ --allowed-address ip-address=10.233.0.0/18 --allowed-address ip-address=10.233.64.0/18
 ````
+
+### Kubernetes Setup
+
+- Clone Kubespray repository
+````bash
+git clone https://github.com/kubernetes-sigs/kubespray.git
+cd kubespray/ && git checkout release-2.27 && cd ~/
+````
+
+- Install Python venv
+````bash
+sudo apt install -y python3-venv
+````
+
+- Install Python venv
+````bash
+mkdir ~/python-env
+python3 -m venv ~/python-env/kubespray
+source ~/python-env/kubespray/bin/activate
+````
+
+- Ensure you're using the latest version of PIP
+````bash
+pip install -U pip
+````
+
+- Now we need to install the dependencies for Ansible to run the Kubespray playbook
+````bash
+pip install -r ~/kubespray/requirements.txt
+````
+
+- Move to Kubespray root directory
+````bash
+cd ~/kubespray
+ansible -i ~/openstack-kubernetes-baremetal/kubespray/inventory/mycluster/inventory.ini -m ping all
+cd ~/
+````
+
+- Deploy Kubernetes
+````bash
+cd ~/kubespray
+ansible-playbook --become -i ~/openstack-kubernetes-baremetal/kubespray/inventory/mycluster/inventory.ini cluster.yml
+cd ~/
+````
+
+## Post-setup operations
