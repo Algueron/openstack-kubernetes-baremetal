@@ -22,3 +22,14 @@ module "compute" {
   rook_volume_ids             = module.storage.rook_volume_ids
   worker_node_volume_device   = var.worker_node_volume_device
 }
+
+module "ansible" {
+  source = "./modules/ansible"
+
+  number_control_nodes        = var.number_control_nodes
+  control_plane_hostname      = module.compute.control_plane_hostname
+  control_plane_ip            = module.compute.control_plane_ip
+  number_worker_nodes         = var.number_worker_nodes
+  worker_hostname             = module.compute.worker_hostname
+  worker_ip                   = module.compute.worker_ip
+}
