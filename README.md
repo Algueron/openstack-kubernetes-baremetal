@@ -110,7 +110,7 @@ On the deployment node :
 
 - Log to Openstack as Admin
 ````bash
-source admin-openrc.sh
+source /etc/kolla/admin-openrc.sh
 ````
 
 - Allow Kubernetes CIDR on the created ports
