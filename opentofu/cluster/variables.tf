@@ -21,22 +21,10 @@ variable "number_control_nodes" {
     default     = 1
 }
 
-variable "control_plane_flavor" {
-    description = "Flavor to use for control plane nodes"
-    type        = string
-    default     = "t2.medium"
-}
-
 variable "number_worker_nodes" {
     description = "Number of worker nodes"
     type        = number
     default     = 3
-}
-
-variable "worker_node_flavor" {
-    description = "Flavor to use for worker nodes"
-    type        = string
-    default     = "t2.2xlarge"
 }
 
 variable "worker_node_volume_size_gb" {

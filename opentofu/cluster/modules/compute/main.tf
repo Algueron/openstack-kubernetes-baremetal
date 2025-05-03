@@ -4,11 +4,11 @@ data "openstack_images_image_v2" "os_image" {
 }
 
 data "openstack_compute_flavor_v2" "control_plane_flavor" {
-  name = var.control_plane_flavor
+  name = "kubernetes-control"
 }
 
 data "openstack_compute_flavor_v2" "worker_node_flavor" {
-  name = var.worker_node_flavor
+  name = "kubernetes-worker"
 }
 
 resource "openstack_compute_keypair_v2" "kubernetes_keypair" {
